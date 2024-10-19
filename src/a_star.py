@@ -30,6 +30,15 @@ class Node:
     def __gt__(self, other):
       return self.f > other.f
 
+# ===========================================
+# TODO: Create new function to compute h(n)
+# ===========================================
+def heuristic(n, method):
+    # Placeholder for heuristic computation
+    pass  # Replace with your heuristic function
+
+# ===========================================
+
 def return_path(current_node):
     path = []
     current = current_node
@@ -39,7 +48,7 @@ def return_path(current_node):
     return path[::-1]  # Return reversed path
 
 
-def astar(maze, start, end, allow_diagonal_movement = False):
+def astar(maze, start, end, allow_diagonal_movement = False, heuristic):
     """
     Returns a list of tuples as a path from the given start to the given end in the given maze
     :param maze:
@@ -117,10 +126,19 @@ def astar(maze, start, end, allow_diagonal_movement = False):
             if len([closed_child for closed_child in closed_list if closed_child == child]) > 0:
                 continue
 
+            # ==========================
+            # TODO: Heuristic Function
+            # ==========================
+            # Use the defined function for the heuristic to compute h(n)
+            # replace h computation (below) with defined function
+
             # Create the f, g, and h values
             child.g = current_node.g + 1
             child.h = ((child.position[0] - end_node.position[0]) ** 2) + ((child.position[1] - end_node.position[1]) ** 2)
             child.f = child.g + child.h
+
+            # ==========================
+
 
             # Child is already in the open list
             if len([open_node for open_node in open_list if child.position == open_node.position and child.g > open_node.g]) > 0:
