@@ -218,16 +218,14 @@ def astar(maze, start, end, heuristic_type, allow_diagonal_movement = True):
 
             # =============================================================
 
-
+            '''
             print(f'current node: {current_node}')
             print(f'child nodes: {children}')
             print(f'processing child: {child}')
             print(f'closed_list: {closed_list}')
             print(f'open_list: {open_list}')
             print('\n')
-
-
-
+            '''
 
             # Child is already in the open list
             if len([open_node for open_node in open_list if child.position == open_node.position and child.g > open_node.g]) > 0:
