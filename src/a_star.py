@@ -33,7 +33,7 @@ class Node:
       return self.f > other.f
 
 
-# ======================================================================
+# ================================BEGIN=================================
 # TODO: Create new function to extract the maze from the given text file
 # ======================================================================
 def extract_grid(file_path):
@@ -71,14 +71,14 @@ def extract_grid(file_path):
     end = (rows - 1, cols - 1)  # Bottom-right corner
 
     return grid, size, start, end
+# =================================END==================================
 
 
 
 
-
-# ===========================================
+# ================================BEGIN=================================
 # TODO: Create new function to compute h(n)
-# ===========================================
+# ======================================================================
 def heuristic(pos, goal, heuristic_type=None):
     if heuristic_type == 'manhattan':
         return abs(pos[0] - goal[0]) + abs(pos[1] - goal[1])
@@ -88,19 +88,19 @@ def heuristic(pos, goal, heuristic_type=None):
         return 0  # effectively uses no heuristic.
     else:
         raise ValueError(f"Unknown heuristic type: {heuristic_type}")
+# =================================END==================================
 
-# ===========================================
 
 
-# ===========================================
+# ================================BEGIN=================================
 # TODO: Implement Dijkstra's Algorithm
 # status: complete
-# ===========================================
+# ======================================================================
 # Dijkstra's algorithm (Heuristic h(n) = 0 for all nodes)
 def dijkstra(grid, start, goal):
     return astar(grid, start, goal, 'zero') # Pass zero heuristic
+# =================================END==================================
 
-# ===========================================
 
 def return_path(current_node):
     path = []
@@ -173,7 +173,7 @@ def astar(maze, start, end, heuristic_type, allow_diagonal_movement = True):
             if node_position[0] > (len(maze) - 1) or node_position[0] < 0 or node_position[1] > (len(maze[len(maze)-1]) -1) or node_position[1] < 0:
                 continue
 
-            # =============================================================
+            # ===========================BEGIN=============================
             # TODO: modify the check for walkable terrain
             # =============================================================
             # Make sure walkable terrain
@@ -185,8 +185,8 @@ def astar(maze, start, end, heuristic_type, allow_diagonal_movement = True):
             # zeros mean unpassable terrain. so they are not valid children
             if maze[node_position[0]][node_position[1]] == 0:
                 continue
+            # ============================END==============================
 
-            # =============================================================
 
             # Create new node
             new_node = Node(current_node, node_position)
@@ -200,7 +200,7 @@ def astar(maze, start, end, heuristic_type, allow_diagonal_movement = True):
             if len([closed_child for closed_child in closed_list if closed_child == child]) > 0:
                 continue
 
-            # =============================================================
+            # ===========================BEGIN=============================
             # TODO: Heuristic Function
             # =============================================================
             # Use the defined function for the heuristic to compute h(n)
@@ -215,8 +215,8 @@ def astar(maze, start, end, heuristic_type, allow_diagonal_movement = True):
             child.h = heuristic(child.position, end_node.position, heuristic_type)
 
             child.f = child.g + child.h
+            # ============================END==============================
 
-            # =============================================================
 
             '''
             print(f'current node: {current_node}')
@@ -239,7 +239,7 @@ def astar(maze, start, end, heuristic_type, allow_diagonal_movement = True):
 
 
 
-# ===========================================================================
+# ===================================BEGIN===================================
 # TODO: create function to print the grid properly
 # ===========================================================================
 def print_2d_array(grid, path=None):
@@ -267,6 +267,9 @@ def print_2d_array(grid, path=None):
         # print the modified grid
         for row in grid:
             print(" ".join(map(str, row)))
+# ================================END========================================
+
+
 
 def example(print_maze = True):
 
@@ -375,7 +378,6 @@ def main():
     # ==============================================================================
     # TODO: run A-star with the extracted data from the grid file
     # ==============================================================================
-
     if (heuristic_type == 'dijkstra'):
         path = dijkstra(grid, start, end)
     else:
@@ -383,7 +385,6 @@ def main():
 
     print_2d_array(grid, path)
     print(path)
-
     # ==============================================================================
 
 
