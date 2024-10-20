@@ -381,12 +381,12 @@ def main():
     # TODO: extract the grid from the provided file path and print contents
     # ==============================================================================
     grid, size, start, end = extract_grid(args.filepath)
-    print('The original grid is:')
-    print_2d_array(grid)
-    print('\n')
     print(f'Size: {size[0]} x {size[1]}')
+    print('Grid:')
+    print_2d_array(grid)
     print(f'Start: {start}')
-    print(f'End: {end}')
+    print(f'Goal: {end}')
+    print('\n')
     # =======================================END====================================
 
 
@@ -398,12 +398,13 @@ def main():
     else:
         path, cost, num_expanded = astar(grid, start, end, heuristic_type)
 
-
+    print('OUTPUT')
+    print(f'Path: {path}')
     print(f'Cost: {cost}')
     print(f'Nodes Expanded: {num_expanded}')
-
+    print('Diagram of solution:')
     print_2d_array(grid, path)
-    print(path)
+
     # =======================================END====================================
 
 # ====================================END====================================
