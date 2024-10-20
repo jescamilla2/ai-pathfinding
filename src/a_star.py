@@ -114,10 +114,13 @@ def return_path(current_node):
 def astar(maze, start, end, heuristic_type, allow_diagonal_movement = True):
     """
     Returns a list of tuples as a path from the given start to the given end in the given maze
-    :param maze:
-    :param start:
-    :param end:
-    :return:
+    :param maze: the array representing the grid
+    :param start: the start position
+    :param end: the goal position
+    :param heuristic_type: can be dijkstra, euclidean, manhattan, or None
+    :return path: a list of tuples representing the optimal path from start to end
+    :return cost: the total cost to the end node
+    :return nodes_expanded: the number of nodes expanded
     """
 
     # Create start and end node
@@ -157,9 +160,21 @@ def astar(maze, start, end, heuristic_type, allow_diagonal_movement = True):
         current_node = heapq.heappop(open_list)
         closed_list.append(current_node)
 
+        # ===========================BEGIN=============================
+        # TODO: modify to return the total cost and num expanded nodes
+        # =============================================================
+        '''
         # Found the goal
         if current_node == end_node:
             return return_path(current_node)
+        '''
+        if current_node == end_node:
+            optimal_path = return_path(current_node)
+            cost = current_node.g
+            expanded_nodes = len(closed_list)
+            return optimal_path, cost, expanded_nodes
+        # ============================END==============================
+
 
         # Generate children
         children = []
@@ -332,7 +347,7 @@ def example(print_maze = True):
     print(path)
 
 
-# ===========================================================================
+# ===================================BEGIN===================================
 # TODO: The main function. Needs to use the command line to take in arguments
 # ===========================================================================
 # example: python a_star.py input_grid.txt manhattan
@@ -355,14 +370,14 @@ def main():
     # parse the arguments
     args = parser.parse_args()
 
-    # ==============================================================================
+    # ======================================BEGIN===================================
     # TODO: determine which heuristic to use: Manhattan/Euclidean or None (Dijkstra)
     # ==============================================================================
     heuristic_type = args.heuristic
-    # ==============================================================================
+    # =======================================END====================================
 
 
-    # ==============================================================================
+    # ======================================BEGIN===================================
     # TODO: extract the grid from the provided file path and print contents
     # ==============================================================================
     grid, size, start, end = extract_grid(args.filepath)
@@ -372,20 +387,26 @@ def main():
     print(f'Size: {size[0]} x {size[1]}')
     print(f'Start: {start}')
     print(f'End: {end}')
-    # ==============================================================================
+    # =======================================END====================================
 
 
-    # ==============================================================================
+    # ======================================BEGIN===================================
     # TODO: run A-star with the extracted data from the grid file
     # ==============================================================================
     if (heuristic_type == 'dijkstra'):
-        path = dijkstra(grid, start, end)
+        path, cost, num_expanded = dijkstra(grid, start, end)
     else:
-        path = astar(grid, start, end, heuristic_type)
+        path, cost, num_expanded = astar(grid, start, end, heuristic_type)
+
+
+    print(f'Cost: {cost}')
+    print(f'Nodes Expanded: {num_expanded}')
 
     print_2d_array(grid, path)
     print(path)
-    # ==============================================================================
+    # =======================================END====================================
+
+# ====================================END====================================
 
 
 if __name__ == '__main__':
