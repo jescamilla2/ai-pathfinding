@@ -79,13 +79,13 @@ def extract_grid(file_path):
 # ===========================================
 # TODO: Create new function to compute h(n)
 # ===========================================
-def heuristic(pos, goal, heuristic_type):
+def heuristic(pos, goal, heuristic_type=None):
     if heuristic_type == 'manhattan':
         return abs(pos[0] - goal[0]) + abs(pos[1] - goal[1])
     elif heuristic_type == 'euclidean':
         return ((pos[0] - goal[0]) ** 2 + (pos[1] - goal[1]) ** 2) ** 0.5
-    elif heuristic_type == 'dijkstra':
-        return 0  # Dijkstra has no heuristic component
+    elif heuristic_type == 'zero':
+        return 0  # effectively uses no heuristic.
     else:
         raise ValueError(f"Unknown heuristic type: {heuristic_type}")
 
@@ -98,7 +98,7 @@ def heuristic(pos, goal, heuristic_type):
 # ===========================================
 # Dijkstra's algorithm (Heuristic h(n) = 0 for all nodes)
 def dijkstra(grid, start, goal):
-    return a_star(grid, start, goal, 'zero') # Pass zero heuristic
+    return astar(grid, start, goal, 'zero') # Pass zero heuristic
 
 # ===========================================
 
@@ -345,7 +345,9 @@ def main():
 
     # add the arguments
     parser.add_argument('filepath', type=str, help='file containing the grid')
-    parser.add_argument('heuristic', type=str, default=None, help='specifies the heuristic to be used: manhattan/euclidean')
+    parser.add_argument('heuristic', type=str, nargs='?', default='zero',
+                        choices=['manhattan', 'euclidean', 'dijkstra', 'zero'],
+                        help='Heuristic to use (default: zero)')
 
     # parse the arguments
     args = parser.parse_args()
@@ -353,9 +355,7 @@ def main():
     # ==============================================================================
     # TODO: determine which heuristic to use: Manhattan/Euclidean or None (Dijkstra)
     # ==============================================================================
-
     heuristic_type = args.heuristic
-
     # ==============================================================================
 
 
@@ -369,7 +369,6 @@ def main():
     print(f'Size: {size[0]} x {size[1]}')
     print(f'Start: {start}')
     print(f'End: {end}')
-
     # ==============================================================================
 
 
@@ -377,13 +376,15 @@ def main():
     # TODO: run A-star with the extracted data from the grid file
     # ==============================================================================
 
-    path = astar(grid, start, end, heuristic_type)
+    if (heuristic_type == 'dijkstra'):
+        path = dijkstra(grid, start, end)
+    else:
+        path = astar(grid, start, end, heuristic_type)
+
     print_2d_array(grid, path)
     print(path)
 
-
     # ==============================================================================
-
 
 
 if __name__ == '__main__':
