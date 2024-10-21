@@ -4,6 +4,7 @@ from warnings import warn
 
 import argparse # allows for arguments from the command line to be parsed
 import heapq
+import time # module to time the runs
 
 class Node:
     """
@@ -128,6 +129,7 @@ def astar(maze, start, end, heuristic_type, allow_diagonal_movement = True):
     start_node.g = start_node.h = start_node.f = 0
     end_node = Node(None, end)
     end_node.g = end_node.h = end_node.f = 0
+    num_cycles = 0
 
     # Initialize both open and closed list
     open_list = []
@@ -139,7 +141,7 @@ def astar(maze, start, end, heuristic_type, allow_diagonal_movement = True):
 
     # Adding a stop condition
     outer_iterations = 0
-    max_iterations = 1000 #(len(maze[0]) * len(maze) // 2)
+    max_iterations = 100000 #(len(maze[0]) * len(maze) // 2)
 
     # what squares do we search
     adjacent_squares = ((0, -1), (0, 1), (-1, 0), (1, 0),)
@@ -172,7 +174,8 @@ def astar(maze, start, end, heuristic_type, allow_diagonal_movement = True):
             optimal_path = return_path(current_node)
             cost = current_node.g
             expanded_nodes = len(closed_list)
-            return optimal_path, cost, expanded_nodes
+            has_cycles = True if num_cycles > 0 else False
+            return optimal_path, cost, expanded_nodes, has_cycles
         # ============================END==============================
 
 
@@ -211,9 +214,22 @@ def astar(maze, start, end, heuristic_type, allow_diagonal_movement = True):
 
         # Loop through children
         for child in children:
+
+            # ===========================BEGIN=============================
+            # TODO: Ignore parents and check for cycles
+            # =============================================================
+            '''
             # Child is on the closed list
             if len([closed_child for closed_child in closed_list if closed_child == child]) > 0:
                 continue
+            '''
+            if len([closed_child for closed_child in closed_list if closed_child == child]) > 0:
+                num_cycles += 1
+                continue
+
+
+            # ============================END==============================
+
 
             # ===========================BEGIN=============================
             # TODO: Heuristic Function
@@ -231,7 +247,6 @@ def astar(maze, start, end, heuristic_type, allow_diagonal_movement = True):
 
             child.f = child.g + child.h
             # ============================END==============================
-
 
             '''
             print(f'current node: {current_node}')
@@ -288,7 +303,6 @@ def print_2d_array(grid, path=None):
 
 def example(print_maze = True):
 
-    '''
     maze = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,] * 2,
             [0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,] * 2,
             [0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,] * 2,
@@ -305,24 +319,6 @@ def example(print_maze = True):
             [0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,1,1,] * 2,
             [0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,] * 2,
             [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,] * 2,]
-    '''
-
-    maze = [[1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,] ,
-            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,] ,
-            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,] ,
-            [0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,] ,
-            [0,0,0,1,1,0,0,1,1,1,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,] ,
-            [0,0,0,1,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,] ,
-            [0,0,0,1,0,1,1,1,1,0,1,1,0,0,1,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,] ,
-            [0,0,0,1,0,1,0,0,0,0,0,1,0,0,0,0,1,1,0,1,0,0,0,0,0,0,1,1,1,0,] ,
-            [0,0,0,1,0,1,1,0,1,1,0,1,1,1,0,0,0,0,0,1,0,0,1,1,1,1,1,0,0,0,] ,
-            [0,0,0,1,0,1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,1,0,1,0,1,1,] ,
-            [0,0,0,1,0,1,0,1,1,0,1,1,1,1,0,0,1,1,1,1,1,1,1,0,1,0,1,0,0,0,] ,
-            [0,0,0,1,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,1,1,1,0,] ,
-            [0,0,0,1,0,1,1,1,1,0,1,0,0,1,1,1,0,1,1,1,1,0,1,1,1,0,1,0,0,0,] ,
-            [0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,1,1,] ,
-            [0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,] ,
-            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,] ,]
 
     start = (0, 0)
     end = (len(maze)-1, len(maze[0])-1)
@@ -393,15 +389,25 @@ def main():
     # ======================================BEGIN===================================
     # TODO: run A-star with the extracted data from the grid file
     # ==============================================================================
+
+
     if (heuristic_type == 'dijkstra'):
-        path, cost, num_expanded = dijkstra(grid, start, end)
+        start_time = time.perf_counter()
+        path, cost, num_expanded, has_cycles = dijkstra(grid, start, end)
+        end_time = time.perf_counter()
     else:
-        path, cost, num_expanded = astar(grid, start, end, heuristic_type)
+        start_time = time.perf_counter()
+        path, cost, num_expanded, has_cycles = astar(grid, start, end, heuristic_type)
+        end_time = time.perf_counter()
+
+    elapsed = end_time - start_time
 
     print('OUTPUT')
+    print(f'Time: {elapsed} s')
     print(f'Path: {path}')
     print(f'Cost: {cost}')
     print(f'Nodes Expanded: {num_expanded}')
+    print(f'Cycles Detected: {"Yes" if has_cycles else "No"}')
     print('Diagram of solution:')
     print_2d_array(grid, path)
 
