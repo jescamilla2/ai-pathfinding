@@ -1,4 +1,4 @@
-# Programming Assignment 1
+# Pathfinding Using A-star and Dijkstra's Algorithm
 
 Usage is fairly straightforward as the program can be run from the command line.
 The input is as follows:
