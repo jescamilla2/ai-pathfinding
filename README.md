@@ -1,4 +1,4 @@
-# Pathfinding Using A-star and Dijkstra's Algorithm
+# Pathfinding Using A* Algorithm with Cycle Detection
 
 Usage is fairly straightforward as the program can be run from the command line.
 The input is as follows:
