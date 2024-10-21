@@ -7,6 +7,7 @@ The input is as follows:
 
 If no heuristic is provided, then it defaults to zero.
 Options for the heuristic include: `euclidean`, `manhattan`, `dijkstra`
+If no heuristic is supplied, then a default heuristic is used: `h(n) = 0`
 
 Here is an example:
 
