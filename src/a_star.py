@@ -129,7 +129,7 @@ def astar(maze, start, end, heuristic_type, allow_diagonal_movement = True):
     start_node.g = start_node.h = start_node.f = 0
     end_node = Node(None, end)
     end_node.g = end_node.h = end_node.f = 0
-    num_cycles = 0
+    num_cycles = 0  # added to track how many cycles are detected
 
     # Initialize both open and closed list
     open_list = []
@@ -160,7 +160,20 @@ def astar(maze, start, end, heuristic_type, allow_diagonal_movement = True):
 
         # Get the current node
         current_node = heapq.heappop(open_list)
+
+        # ===========================BEGIN=============================
+        # TODO: modify closed_list to not allow duplicates
+        # =============================================================
+        '''
+        # old code
         closed_list.append(current_node)
+        '''
+        # only add the node to the list if it's not already there
+        if current_node not in closed_list:
+            closed_list.append(current_node)
+        # ============================END==============================
+
+
 
         # ===========================BEGIN=============================
         # TODO: modify to return the total cost and num expanded nodes
@@ -390,15 +403,14 @@ def main():
     # TODO: run A-star with the extracted data from the grid file
     # ==============================================================================
 
+    start_time = time.perf_counter()
 
     if (heuristic_type == 'dijkstra'):
-        start_time = time.perf_counter()
         path, cost, num_expanded, has_cycles = dijkstra(grid, start, end)
-        end_time = time.perf_counter()
     else:
-        start_time = time.perf_counter()
-        path, cost, num_expanded, has_cycles = astar(grid, start, end, heuristic_type)
-        end_time = time.perf_counter()
+        path, cost, num_expanded, has_cycles = astar(grid, start, end, heuristic_type, allow_diagonal_movement=True)
+
+    end_time = time.perf_counter()
 
     elapsed = end_time - start_time
 
